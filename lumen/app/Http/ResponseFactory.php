@@ -10,7 +10,7 @@ use Zend\Config\Writer\Xml;
 
 class ResponseFactory extends Response
 {
-     public function make($content = '', $status = 200, array $headers = [])
+    public function make($content = '', $status = 200, array $headers = [])
     {
         /** @var Request $request */
         $request = app('request');
@@ -29,7 +29,7 @@ class ResponseFactory extends Response
         }
         return $result;
     }
-     protected function getXML($data)
+    protected function getXML($data)
     {
         if($data instanceof Arrayable){
             $data = $data->toArray();
