@@ -66,35 +66,49 @@ $app->get('tcu', function(){
 /*
 Routes dosen't accept dots (son-soap.wsdl) ?- 
 */
- 
 
-$uri = 'http://son-soap.dev:8080';
-$app->get("son-soap-wsdl", function () use ($uri) {
-    $autoDiscover = new \Zend\Soap\AutoDiscover();
+$uri = 'http://127.0.0.1:8080';
+
+$app->get('soap/wsdl', function () use ($uri) {
+   
+   //phpinfo();
+     $autoDiscover = new \Zend\Soap\AutoDiscover();
     $autoDiscover->setUri("$uri/server");
     $autoDiscover->setServiceName('SONSOAP');
     $autoDiscover->addFunction('soma');
-    $autoDiscover->handle();
+    $autoDiscover->handle(); 
+
 });
 
 $app->post('server', function () use ($uri) {
-    $server = new \Zend\Soap\Server("$uri/son-soap-wsdl", [
+    $server = new \Zend\Soap\Server("$uri/config.wsdl", [
         'cache_wsdl' => WSDL_CACHE_NONE
     ]);
-    $server->setUri("$uri/server");
+    $server->setUri("server");
     return $server
         ->setReturnResponse(true)
         ->addFunction('soma')
         ->handle();
 });
-
-$app->get('soap-test', function () use ($uri) {
-    $client = new \Zend\Soap\Client("$uri/son-soap-wsdl", [
-        'cache_wsdl' => WSDL_CACHE_NONE
+$app->get('soap_test', function () use ($uri) {
+	
+     $client = new \Zend\Soap\Client("$uri/config.wsdl", [
+        'cache_wsdl' => WSDL_CACHE_NONE 
     ]);
-    print_r($client->soma(100, 200));
+	
+	echo '<pre>';
+	echo "Informações do servidor: <br/>";
+	print_r($client->getOptions());
+	echo "Funções:<br/>";
+	print_r($client->getFunctions());
+	echo "Tipos:<br/>";
+	/*
+	print_r($client->getTypes());*/
+    
+    //print_r($client->soma(1, 1));
+	 
 });
-
+/*
  
 //SOAP SERVER com CLIENT
 $uriClient = "$uri/client";
@@ -108,7 +122,7 @@ $app->get('client/son-soap.wsdl', function () use ($uriClient){
 
 $app->post('client/server', function () use ($uriClient){
 	$server = new \zend\Soap\Server("$uriClient/son-soap.wsdl", [
-		'cache_wsdl' => WSDL_CACHE_NONE
+		'cache_wsdl' => 0
 	]);
 	$server->setUri("uriClient/server");
 	return $server
@@ -128,17 +142,16 @@ $app->get('soap-client', function () use ($uriClient) {
 		'name' 	=> 'Onesimo Batista',
 		'email' => 'onesimobatista@gmail.com',
 		'phone' => '777'
-	]));*/
+	]));
 
 });
-
+*/
  
 /**
-*@param int $num1
-*@param int $num2
-*@return int
-*/
-
+ * @param int $num1
+ * @param int $num2
+ * @return int
+ */
 function soma($num1, $num2)
 {
 	return $num1 + $num2;
